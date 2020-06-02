@@ -198,9 +198,19 @@ public: //types
     struct DistanceSetting : SensorSetting {
     };
 
+    struct UwbTag{ // struct for storing static tag
+        uint tag;
+        bool is_static;
+        bool enabled;
+        real_T min_distance; //in meters
+        real_T max_distance; //in meters 
+        Pose asb_pose;
+    };
+
     struct UwbSetting:SensorSetting{
-        uint tag = 0;    // tag 0 is the default tag 
-    }
+        uint tag = 0;    // tag 0 is the default tag
+        std::vector<UwbTag> available_tags;
+    };
 
     struct LidarSetting : SensorSetting {
 
@@ -1164,6 +1174,33 @@ private:
         //TODO: set from json as needed
     }
 
+    static void loadStaticUwbTagSetting(std::vector<UwbTag>& static_tags, const Settings& settings_json)
+    {
+        // TODO load Static uwb setting;
+        unused(static_tags);
+        unused(settings_json);
+    }
+    static void loadDynamicUwbTagSetting(std::vector<UwbTag>& dynamic_tags, const Settings& settings_json)
+    {
+        // TODO load Dynamic uwb setting;
+        unused(dynamic_tags);
+        unused(settings_json);
+    }
+    static void loadAvailableUwbTagSetting(std::vector<UwbTag>& available_tags, const Settings& settings_json)
+    {
+        loadStaticUwbTagSetting(available_tags, settings_json);
+        loadDynamicUwbTagSetting(available_tags,settings_json);
+    }
+
+    static void initializeUwbSetting(UwbSetting& uwb_setting, const Settings& settings_json)
+    {
+        std::vector<UwbTag> available_tags;
+        loadAvailableUwbTagSetting(available_tags, settings_json);
+        unused(uwb_setting);
+        unused(settings_json);
+        //TODO: set from json as needed
+    }
+
     static void initializeLidarSetting(LidarSetting& lidar_setting, const Settings& settings_json)
     {
         lidar_setting.number_of_channels = settings_json.getInt("NumberOfChannels", lidar_setting.number_of_channels);
@@ -1207,6 +1244,9 @@ private:
         case SensorBase::SensorType::Lidar:
             sensor_setting = std::unique_ptr<SensorSetting>(new LidarSetting());
             break;
+        case SensorBase::SensorType::Uwb:
+            sensor_setting = std::unique_ptr<SensorSetting>(new UwbSetting());
+            break;
         default:
             throw std::invalid_argument("Unexpected sensor type");
         }
@@ -1238,6 +1278,9 @@ private:
         case SensorBase::SensorType::Distance:
             initializeDistanceSetting(*static_cast<DistanceSetting*>(sensor_setting), settings_json);
             break;
+        case SensorBase::SensorType::Uwb:
+            initializeUwbSetting(*static_cast<UwbSetting*>(sensor_setting), settings_json);
+            break;    
         case SensorBase::SensorType::Lidar:
             initializeLidarSetting(*static_cast<LidarSetting*>(sensor_setting), settings_json);
             break;

@@ -11,15 +11,16 @@
 #include "common/GaussianMarkov.hpp"
 #include "common/DelayLine.hpp"
 #include "common/FrequencyLimiter.hpp"
+#include "common/AirSimSettings.hpp"
 
 namespace msr { namespace airlib {
 
 class UwbSimple  : public UwbBase {
 public:
     UwbSimple(const AirSimSettings::UwbSetting& setting = AirSimSettings::UwbSetting())
-        : UwbBase(setting.sensor_name, setting.tag)
+        : UwbBase(setting.sensor_name)
     {
-        // initialize params
+        // initialize params, including tag
         params_.initializeFromSettings(setting);
 
         uncorrelated_noise_ = RandomGeneratorGausianR(0.0f, params_.unnorrelated_noise_sigma);
@@ -30,6 +31,8 @@ public:
         freq_limiter_.initialize(params_.update_frequency, params_.startup_delay);
         delay_line_.initialize(params_.update_latency);
     }
+
+    virtual void initializeWorldUwbInfo(std::vector<AirSimSettings::UwbTag>* uwb_tags ) = 0; // TODO: I want just use available_tags_ to point this object, is that right?
 
     //*** Start: UpdatableState implementation ***//
     virtual void resetImplementation() override
@@ -62,13 +65,19 @@ public:
 
     virtual ~UwbSimple() = default;
 
+public: //types and variables
+    std::vector<AirSimSettings::UwbTag>*  available_tags_; //TODO: add some code for initialization
+
 protected:
-    virtual real_T getRayLength(const Pose& pose) = 0;
+    virtual real_T getRayLength(const Pose& pose, const uint tag ) = 0;
     const UwbSimpleParams& getParams()
     {
         return params_;
     }
-
+    const uint getTag()
+    {
+        return params_.tag;
+    }
 private: //methods
     Output getOutputInternal()
     {
@@ -76,7 +85,8 @@ private: //methods
         const GroundTruth& ground_truth = getGroundTruth();
 
         //order of Pose addition is important here because it also adds quaternions which is not commutative!
-        auto distance = getRayLength(params_.relative_pose + ground_truth.kinematics->pose);
+        // TODO: in order to compile, the current tag is alway 1
+        auto distance = getRayLength(params_.relative_pose + ground_truth.kinematics->pose,1);
 
         //add noise in distance (about 0.2m sigma)
         distance += uncorrelated_noise_.next();

@@ -12,10 +12,9 @@ namespace msr { namespace airlib {
 
 class UwbBase  : public SensorBase {
 public:
-    UwbBase(const std::string& sensor_name = "", const uint tag = 0)
+    UwbBase(const std::string& sensor_name = "")
         : SensorBase(sensor_name)
     {
-        tag_  =  tag;
     }
 
 public: //types
@@ -53,7 +52,6 @@ protected:
 
 
 private:
-    uint tag_;
     Output output_;
 };
 

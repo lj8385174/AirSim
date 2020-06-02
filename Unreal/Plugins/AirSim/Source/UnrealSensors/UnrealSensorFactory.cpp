@@ -21,6 +21,9 @@ std::unique_ptr<msr::airlib::SensorBase> UnrealSensorFactory::createSensorFromSe
     case SensorBase::SensorType::Lidar:
         return std::unique_ptr<UnrealLidarSensor>(new UnrealLidarSensor(
             *static_cast<const AirSimSettings::LidarSetting*>(sensor_setting), actor_, ned_transform_));
+    case SensorBase::SensorType::Uwb:
+        return std::unique_ptr<UnrealUwbSensor>(new UnrealUwbSensor(
+            *static_cast<const AirSimSettings::UwbSetting*>(sensor_setting), actor_, ned_transform_));
     default:
         return msr::airlib::SensorFactory::createSensorFromSettings(sensor_setting);
     }
