@@ -198,6 +198,10 @@ public: //types
     struct DistanceSetting : SensorSetting {
     };
 
+    struct UwbSetting:SensorSetting{
+        uint tag = 0;    // tag 0 is the default tag 
+    }
+
     struct LidarSetting : SensorSetting {
 
         // shared defaults
