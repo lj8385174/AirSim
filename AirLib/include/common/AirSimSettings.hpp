@@ -204,7 +204,8 @@ public: //types
         bool enabled;
         real_T min_distance; //in meters
         real_T max_distance; //in meters 
-        Pose asb_pose;
+        Pose pose; // for static tag, it means absolute position, for dynamic tag, it is the relative position
+        // probably add some binded actor so as to edit in unreal editor
     };
 
     struct UwbSetting:SensorSetting{
@@ -1176,15 +1177,63 @@ private:
 
     static void loadStaticUwbTagSetting(std::vector<UwbTag>& static_tags, const Settings& settings_json)
     {
-        // TODO load Static uwb setting;
-        unused(static_tags);
-        unused(settings_json);
+        msr::airlib::Settings static_uwb_childs;
+        if (settings_json.getChild("StaticUwbTags", static_uwb_childs)){
+            for (size_t child_index = 0; child_index < static_uwb_childs.size(); ++child_index) {
+                Settings json_settings_child;
+                if (static_uwb_childs.getChild(child_index, json_settings_child)) {
+                    uint static_tag_id = (uint)(json_settings_child.getInt("Tag", 0));
+                    bool static_tag_enabled = json_settings_child.getBool("Enabled", 0);
+                    real_T  min_distance    = json_settings_child.getFloat("MinDistance", 0);
+                    real_T  max_distance    = json_settings_child.getFloat("MaxDistance", 0);
+                    real_T  p_x             =  json_settings_child.getFloat("X", 0);
+                    real_T  p_y             =  json_settings_child.getFloat("Y", 0);
+                    real_T  p_z             =  json_settings_child.getFloat("Z", 0);
+                    UwbTag  static_tag;
+                    static_tag.tag =  static_tag_id;
+                    static_tag.enabled = static_tag_enabled;
+                    static_tag.is_static = true;
+                    static_tag.max_distance = max_distance;
+                    static_tag.min_distance = min_distance;
+                    static_tag.pose  =  Pose(Vector3r(p_x, p_y, p_z), Quaternionr(1, 0, 0, 0));
+                    static_tags.push_back(static_tag);
+                }
+            }
+        }
     }
     static void loadDynamicUwbTagSetting(std::vector<UwbTag>& dynamic_tags, const Settings& settings_json)
     {
-        // TODO load Dynamic uwb setting;
-        unused(dynamic_tags);
-        unused(settings_json);
+        msr::airlib::Settings vehicles_child;
+        if (settings_json.getChild("Vehicles", vehicles_child)) {
+            std::vector<std::string> keys;
+            vehicles_child.getChildNames(keys);
+            for (const auto& key : keys) {
+                msr::airlib::Settings child;
+                vehicles_child.getChild(key, child);
+                msr::airlib::Settings child_sensors;
+                if (child.getChild("Sensors",child_sensors)){
+                    std::vector<std::string> sensor_names;
+                    child_sensors.getChildNames(sensor_names);
+                    for (const auto & sensor_name  : sensor_names){
+                        msr::airlib::Settings child_sensor;
+                        child_sensors.getChild(sensor_name,child_sensor);
+                        auto sensor_type = Utils::toEnum<SensorBase::SensorType>(child_sensor.getInt("SensorType", 0));
+                        if (sensor_type == SensorBase::SensorType::Uwb){
+                            UwbTag  dynamic_tag;
+                            dynamic_tag.is_static = false;
+                            dynamic_tag.enabled = child_sensor.getBool("Enabled", 0);
+                            dynamic_tag.min_distance = child_sensor.getFloat("MinDistance", 0);
+                            dynamic_tag.max_distance = child_sensor.getFloat("MaxDistance", 0);
+                            real_T  p_x             =  child_sensor.getFloat("X", 0);
+                            real_T  p_y             =  child_sensor.getFloat("Y", 0);
+                            real_T  p_z             =  child_sensor.getFloat("Z", 0);
+                            dynamic_tag.pose        =  Pose(Vector3r(p_x, p_y, p_z), Quaternionr(1, 0, 0, 0)); 
+                            dynamic_tags.push_back(dynamic_tag);
+                        }
+                    }
+                }
+            }
+        }
     }
     static void loadAvailableUwbTagSetting(std::vector<UwbTag>& available_tags, const Settings& settings_json)
     {
