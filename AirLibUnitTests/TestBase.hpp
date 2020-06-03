@@ -2,6 +2,7 @@
 #define msr_AirLibUnitTests_TestBase_hpp
 
 #include <string>
+#include <iostream>
 #include <exception>
 #include "common/common_utils/Utils.hpp"
 
@@ -9,6 +10,11 @@ namespace msr { namespace airlib {
 
 class TestBase {
 public:
+   
+    void printName(const std::string& a ){
+        std::cout<<"TestName:"<< a << std::endl;
+    }
+
     virtual void run() = 0;
 
     void testAssert(double lhs, double rhs, const std::string& message) {

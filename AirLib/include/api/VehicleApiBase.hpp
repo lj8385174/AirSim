@@ -17,6 +17,7 @@
 #include "sensors/barometer/BarometerBase.hpp"
 #include "sensors/magnetometer/MagnetometerBase.hpp"
 #include "sensors/distance/DistanceBase.hpp"
+#include "sensors/uwb/UwbBase.hpp"
 #include "sensors/gps/GpsBase.hpp"
 #include <exception>
 #include <string>
@@ -233,6 +234,26 @@ public:
             throw VehicleControllerException(Utils::stringf("No distance sensor with name %s exist on vehicle", distance_sensor_name.c_str()));
 
         return distance_sensor->getOutput();
+    }
+
+    virtual UwbBase::Output getUwbSensorData(const std::string& uwb_sensor_name) const
+    {
+        const UwbBase* uwb_sensor = nullptr;
+
+        uint count_uwb_sensors = getSensors().size(SensorBase::SensorType::Uwb);
+        for (uint i = 0; i < count_uwb_sensors; i++)
+        {
+            const UwbBase* current_uwb_sensor = static_cast<const UwbBase*>(getSensors().getByType(SensorBase::SensorType::Uwb, i));
+            if (current_uwb_sensor != nullptr && (current_uwb_sensor->getName() == uwb_sensor_name || uwb_sensor_name == ""))
+            {
+                uwb_sensor = current_uwb_sensor;
+                break;
+            }
+        }
+        if (uwb_sensor == nullptr)
+            throw VehicleControllerException(Utils::stringf("No uwb sensor with name %s exist on vehicle", uwb_sensor_name.c_str()));
+
+        return uwb_sensor->getOutput();
     }
 
     virtual ~VehicleApiBase() = default;

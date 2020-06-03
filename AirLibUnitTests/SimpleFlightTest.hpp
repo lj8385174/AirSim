@@ -17,7 +17,8 @@ class SimpleFlightTest : public TestBase
 {
 public:
     virtual void run() override
-    {
+    {   
+        printName("SimpleFlightTest");
         auto clock = std::make_shared<SteppableClock>(3E-3f);
         ClockFactory::get(clock);
 

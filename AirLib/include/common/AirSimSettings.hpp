@@ -210,6 +210,9 @@ public: //types
 
     struct UwbSetting:SensorSetting{
         uint tag = 0;    // tag 0 is the default tag
+        real_T min_distance; //in meters
+        real_T max_distance; //in meters
+        Pose pose; // for static tag, it means absolute position, for dynamic tag, it is the relative position
         std::vector<UwbTag> available_tags;
     };
 
@@ -1183,7 +1186,7 @@ private:
                 Settings json_settings_child;
                 if (static_uwb_childs.getChild(child_index, json_settings_child)) {
                     uint static_tag_id = (uint)(json_settings_child.getInt("Tag", 0));
-                    bool static_tag_enabled = json_settings_child.getBool("Enabled", 0);
+                    bool static_tag_enabled = json_settings_child.getBool("Enabled", false);
                     real_T  min_distance    = json_settings_child.getFloat("MinDistance", 0);
                     real_T  max_distance    = json_settings_child.getFloat("MaxDistance", 0);
                     real_T  p_x             =  json_settings_child.getFloat("X", 0);
@@ -1221,7 +1224,8 @@ private:
                         if (sensor_type == SensorBase::SensorType::Uwb){
                             UwbTag  dynamic_tag;
                             dynamic_tag.is_static = false;
-                            dynamic_tag.enabled = child_sensor.getBool("Enabled", 0);
+                            dynamic_tag.tag     = (uint)(child_sensor.getInt("Tag", 0));
+                            dynamic_tag.enabled = child_sensor.getBool("Enabled", false);
                             dynamic_tag.min_distance = child_sensor.getFloat("MinDistance", 0);
                             dynamic_tag.max_distance = child_sensor.getFloat("MaxDistance", 0);
                             real_T  p_x             =  child_sensor.getFloat("X", 0);
@@ -1241,13 +1245,18 @@ private:
         loadDynamicUwbTagSetting(available_tags,settings_json);
     }
 
-    static void initializeUwbSetting(UwbSetting& uwb_setting, const Settings& settings_json)
+    static void initializeUwbSetting(UwbSetting& uwb_setting, const Settings& settings_json, const Settings& total_settings_json)
     {
         std::vector<UwbTag> available_tags;
-        loadAvailableUwbTagSetting(available_tags, settings_json);
-        unused(uwb_setting);
-        unused(settings_json);
-        //TODO: set from json as needed
+        loadAvailableUwbTagSetting(available_tags, total_settings_json); // TODO: current each single vehicle should compute its own uwb setting, while all of them are the same. Should I use some static results to store uwb setting?
+        uwb_setting.tag =   (uint)(settings_json.getInt("Tag", 0));
+        uwb_setting.min_distance = settings_json.getFloat("MinDistance", 0);
+        uwb_setting.max_distance = settings_json.getFloat("MaxDistance", 0);
+        real_T  p_x = settings_json.getFloat("X", 0);
+        real_T  p_y = settings_json.getFloat("Y", 0);
+        real_T  p_z = settings_json.getFloat("Z", 0);
+        uwb_setting.pose = Pose(Vector3r(p_x, p_y, p_z), Quaternionr(1, 0, 0, 0));
+        uwb_setting.available_tags = available_tags;
     }
 
     static void initializeLidarSetting(LidarSetting& lidar_setting, const Settings& settings_json)
@@ -1328,7 +1337,7 @@ private:
             initializeDistanceSetting(*static_cast<DistanceSetting*>(sensor_setting), settings_json);
             break;
         case SensorBase::SensorType::Uwb:
-            initializeUwbSetting(*static_cast<UwbSetting*>(sensor_setting), settings_json);
+            initializeUwbSetting(*static_cast<UwbSetting*>(sensor_setting), settings_json, Settings::singleton());
             break;    
         case SensorBase::SensorType::Lidar:
             initializeLidarSetting(*static_cast<LidarSetting*>(sensor_setting), settings_json);

@@ -12,6 +12,7 @@ class CelestialTest : public TestBase
 public:
     virtual void run() override
     {
+        printName("CelestialTest");
         auto t = static_cast<uint64_t>(Utils::to_time_t("2018-February-22 15:24:00"));
         auto c_sun = EarthCelestial::getSunCoordinates(t, 47.673988, -122.121513);
         auto c_moon = EarthCelestial::getMoonCoordinates(t, 47.673988, -122.121513);
