@@ -13,11 +13,11 @@ public:
     typedef msr::airlib::AirSimSettings AirSimSettings;
 
 public:
-    UnrealUwbSensor(const AirSimSettings::DistanceSetting& setting,
+    UnrealUwbSensor(const AirSimSettings::UwbSetting& setting,
         AActor* actor, const NedTransform* ned_transform);
     virtual void initializeWorldUwbInfo(std::vector<AirSimSettings::UwbTag>* uwb_tags ) override;    
 protected:
-    virtual msr::airlib::real_T getRayLength(const msr::airlib::Pose& pose, const uint tag) override;
+    virtual msr::airlib::real_T getRayLength(const msr::airlib::Pose& pose, const msr::airlib::uint tag) override;
 
 private:
     using Vector3r = msr::airlib::Vector3r;

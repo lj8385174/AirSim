@@ -8,16 +8,16 @@
 
 UnrealUwbSensor::UnrealUwbSensor(const AirSimSettings::UwbSetting& setting,
     AActor* actor, const NedTransform* ned_transform)
-    : UwbSimple(setting), actor_(actor), ned_transform_(ned_transform)
+    : msr::airlib::UwbSimple(setting), actor_(actor), ned_transform_(ned_transform)
 {
 }
 
-void initializeWorldUwbInfo(std::vector<AirSimSettings::UwbTag>* uwb_tags ){
+void UnrealUwbSensor::initializeWorldUwbInfo(std::vector<msr::airlib::AirSimSettings::UwbTag>* uwb_tags) {
     // TODO add some initialization code 
-    available_tags_   =  uwb_tags;
+    unused(uwb_tags);
 }
 
-msr::airlib::real_T UnrealUwbSensor::getRayLength(const msr::airlib::Pose& pose, const uint tag)
+msr::airlib::real_T UnrealUwbSensor::getRayLength(const msr::airlib::Pose& pose, const msr::airlib::uint tag)
 {
     //update ray tracing
     Vector3r start = pose.position;

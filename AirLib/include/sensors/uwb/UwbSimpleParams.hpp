@@ -15,6 +15,7 @@ struct UwbSimpleParams {
     uint tag  =  0; //UWB tag
     real_T min_distance = 20.0f / 100; //m
     real_T max_distance = 9000.0f / 100; //m
+    std::vector<AirSimSettings::UwbTag> available_tags;
     Pose relative_pose;
 
 /*
@@ -39,10 +40,14 @@ struct UwbSimpleParams {
     real_T update_frequency = 50;    //Hz
     real_T startup_delay = 0;        //sec
 
-    void initializeFromSettings(const AirSimSettings::UwbSetting& settings, uint uwbtag)
+    void initializeFromSettings(const AirSimSettings::UwbSetting& settings)
     {
-        tag = uwbtag;
-        unused(settings); 
+        tag = settings.tag;
+        min_distance  = settings.min_distance;
+        max_distance  = settings.max_distance;
+        relative_pose = settings.pose;
+        available_tags= settings.available_tags;
+        // unused(settings); 
     }
 };
 
