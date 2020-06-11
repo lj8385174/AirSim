@@ -8,12 +8,29 @@
 #include "common/Common.hpp"
 #include "UwbSimpleParams.hpp"
 #include "UwbBase.hpp"
+#include "UwbEnvironment.hpp"
 #include "common/GaussianMarkov.hpp"
 #include "common/DelayLine.hpp"
 #include "common/FrequencyLimiter.hpp"
 #include "common/AirSimSettings.hpp"
 
 namespace msr { namespace airlib {
+
+
+#define NOT_REACHABLE_DISTANCE_RESULT -1f
+
+void Choose2 (const int size, int &first, int &second)
+{
+    // pick a random element
+    first = rand () * size / MAX_RAND;
+    // pick a random element from what's left (there is one fewer to choose from)...
+    second = rand () * (size - 1) / MAX_RAND;
+    // ...and adjust second choice to take into account the first choice
+    if (second >= first)
+    {
+        ++second;
+    }
+}
 
 class UwbSimple  : public UwbBase {
 public:
@@ -32,7 +49,10 @@ public:
         delay_line_.initialize(params_.update_latency);
     }
 
-    virtual void initializeWorldUwbInfo(std::vector<AirSimSettings::UwbTag>* uwb_tags ) = 0; // TODO: I want just use available_tags_ to point this object, is that right?
+    virtual void initializeEnvironment(const UwbEnvironment* uwb_env )  // TODO: I want just use available_tags_ to point this object, is that right?
+    {
+        uwb_env_  = uwb_env;
+    }
 
     //*** Start: UpdatableState implementation ***//
     virtual void resetImplementation() override
@@ -86,7 +106,9 @@ private: //methods
 
         //order of Pose addition is important here because it also adds quaternions which is not commutative!
         // TODO: in order to compile, the current tag is alway 1
-        auto distance = getRayLength(params_.relative_pose + ground_truth.kinematics->pose,1);
+        // TODO: uwb scheduler is primitive. In future, we could implement more complex method to choose tags.
+        uint uwb_pair_id = chooseTag();
+        auto distance = getRayLength(params_.relative_pose + ground_truth.kinematics->pose,uwb_pair_id);
 
         //add noise in distance (about 0.2m sigma)
         distance += uncorrelated_noise_.next();
@@ -99,8 +121,27 @@ private: //methods
 
         return output;
     }
+    uint chooseTag(){
+        auto tagnum  = params_.available_tags.size();
+        if (tagnum>1){
+            int first,second;
+            Choose2(tagnum, first, second);
+            auto tag1 = params_.available_tags[first].tag;
+            if(tag1 != params_.tag ){
+                return tag1
+            }
+            else
+            {
+                return( params_.available_tags[second].tag );
+            }
+        }
+        else{
+            return FAKE_UWB_TAG;
+        }
+    }
 
 private:
+    const UwbEnvironment* uwb_env_;
     UwbSimpleParams params_;
 
     //GaussianMarkov correlated_noise_;
@@ -108,6 +149,9 @@ private:
 
     FrequencyLimiter freq_limiter_;
     DelayLine<Output> delay_line_;
+
+    std::random_device rd_;
+    std::mt19937 gen_(rd_());  
 
     //start time
 };

@@ -21,17 +21,42 @@ msr::airlib::real_T UnrealUwbSensor::getRayLength(const msr::airlib::Pose& pose,
 {
     //update ray tracing
     Vector3r start = pose.position;
-    Vector3r end = start + VectorMath::rotateVector(VectorMath::front(), pose.orientation, true) * getParams().max_distance;
-
-    FHitResult dist_hit = FHitResult(ForceInit);
-    bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalNed(start), ned_transform_->fromLocalNed(end), dist_hit);
-    float distance = is_hit? dist_hit.Distance / 100.0f : getParams().max_distance;
-
-    //FString hit_name = FString("None");
-    //if (dist_hit.GetActor())
-    //    hit_name=dist_hit.GetActor()->GetName();
-
-    //UAirBlueprintLib::LogMessage(FString("Distance to "), hit_name+FString(": ")+FString::SanitizeFloat(distance), LogDebugLevel::Informational);
-
-    return distance;
+    auto max_dis1  = getParams().max_distance;
+    auto min_dis1  = getParams().min_distance;
+    auto max_dis2  = uwb_env_ -> tag_uwb_[tag]->max_distance;
+    auto min_dis2  = uwb_env_ -> tag_uwb_[tag]->min_distance;
+    if(uwb_env_->tag_uwb_[tag]->is_static){
+        Vector3r end   =  uwb_env_ -> tag_uwb_[tag]->pose.position;
+        auto distance  = (start - end).norm();
+        auto max_dis  = min(max_dis1,max_dis2);
+        auto min_dis  = max(min_dis1,min_dis2);
+        if (distance>max_dis || distance<min_dis ){
+            // not reachable 
+            return NOT_REACHABLE_DISTANCE_RESULT;
+        }
+        else{
+            FHitResult dist_hit = FHitResult(ForceInit);
+            // AActor* except_actor   = (UnrealUwbEnvironment*)uwb_env_ -> tag_actor_[tag];
+            bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalNed(start), ned_transform_->fromLocalNed(end), dist_hit );
+            float dist = is_hit? NOT_REACHABLE_DISTANCE_RESULT: distance / 100.0f;
+            return dist;
+        }
+    }
+    else{
+        Vector3r end   = uwb_env_->tag_kinematics_[tag].getPose().position + wb_env_ -> tag_uwb_[tag]->pose.position;
+        auto distance  = (start - end).norm();
+        auto max_dis  = min(max_dis1,max_dis2);
+        auto min_dis  = max(min_dis1,min_dis2);
+        if (distance>max_dis || distance<min_dis ){
+            // not reachable 
+            return NOT_REACHABLE_DISTANCE_RESULT;
+        }
+        else{
+            FHitResult dist_hit = FHitResult(ForceInit);
+            AActor* except_actor   = (UnrealUwbEnvironment*)uwb_env_ -> tag_actor_[tag]; //TODO: current it merely ignore from-to actors, while other vehicles should be included.
+            bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalNed(start), ned_transform_->fromLocalNed(end), dist_hit, except_actor );
+            float dist = is_hit? NOT_REACHABLE_DISTANCE_RESULT: distance / 100.0f;
+            return dist;
+        }
+    }
 }

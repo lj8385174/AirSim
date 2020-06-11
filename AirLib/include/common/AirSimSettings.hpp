@@ -207,6 +207,7 @@ public: //types
         Pose pose; // for static tag, it means absolute position, for dynamic tag, it is the relative position
         // probably add some binded actor so as to edit in unreal editor
     };
+    #define FAKE_UWB_TAG  255U 
 
     struct UwbSetting:SensorSetting{
         uint tag = 0;    // tag 0 is the default tag

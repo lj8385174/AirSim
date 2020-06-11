@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "sensors/uwb/UwbSimple.hpp"
 #include "NedTransform.h"
+#include "UnrealUwbEnvironment.h"
 
 class UnrealUwbSensor : public msr::airlib::UwbSimple {
 public:
