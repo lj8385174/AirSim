@@ -8,7 +8,7 @@
 namespace msr { namespace airlib {
         class SensorEnvironmentBase{
             public:
-                virtual PoseSimple getObjectPoseByID(uint object_id) =  0;
+                virtual const Pose&  getObjectPoseByID(uint object_id) =  0;
                 // virtual SensorEnvironmentBase& singleton() = 0;
         };
 

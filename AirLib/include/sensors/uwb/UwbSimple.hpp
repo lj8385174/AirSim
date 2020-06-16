@@ -105,7 +105,6 @@ private: //methods
         const GroundTruth& ground_truth = getGroundTruth();
 
         //order of Pose addition is important here because it also adds quaternions which is not commutative!
-        // TODO: in order to compile, the current tag is alway 1
         // TODO: uwb scheduler is primitive. In future, we could implement more complex method to choose tags.
         uint uwb_pair_id = chooseTag();
         auto distance = getRayLength(params_.relative_pose + ground_truth.kinematics->pose,uwb_pair_id);

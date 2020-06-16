@@ -19,7 +19,7 @@ namespace msr { namespace airlib {
             
         }
 
-        virtual bool  UnrealUwbEnvironment::insertItem(const AirSimSettings::UwbTag* uwb_tag, const Kinematics * kinematic){
+        virtual bool  insertItem(const AirSimSettings::UwbTag* uwb_tag, const Kinematics * kinematic){
             if( uwb_tag->tag == FAKE_UWB_TAG){
                 throw std::invalid_argument("Cannot insert fake tag\n");
             }
@@ -35,7 +35,7 @@ namespace msr { namespace airlib {
             return true;
         }
 
-        virtual const Pose&  UnrealUwbEnvironment::getObjectPoseByID(uint tag){
+        virtual const Pose&  getObjectPoseByID(uint tag){
             auto it  = tag_kinematics_.find(tag);
             if(it != tag_kinematics_.end()){
                 const Kinematics* kinematic = it->second;
