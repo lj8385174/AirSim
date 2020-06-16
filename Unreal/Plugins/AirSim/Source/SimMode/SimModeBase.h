@@ -17,6 +17,7 @@
 
 #include "SimModeBase.generated.h"
 
+#include "UnrealSensors/UnrealUwbEnvironment.h"
 
 UCLASS()
 class AIRSIM_API ASimModeBase : public AActor
@@ -133,6 +134,8 @@ private:
     float tod_celestial_clock_speed_;
     float tod_update_interval_secs_;
     bool tod_move_sun_;
+
+    std::unique_ptr<UnrealUwbEnvironment> unreal_uwb_env_;
 
     std::unique_ptr<NedTransform> global_ned_transform_;
     std::unique_ptr<msr::airlib::WorldSimApiBase> world_sim_api_;
