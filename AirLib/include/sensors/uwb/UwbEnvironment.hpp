@@ -26,10 +26,10 @@ namespace msr { namespace airlib {
             auto it = tag_uwb_.find(uwb_tag->tag);
             if(it !=tag_uwb_.end() ){
                 throw std::invalid_argument("Tag id should be unique\n");
-                return false
+                return false;
             }
             else{
-                tag_kinematics_.insert(std::map<uint,const Kinematics*>::value_type(uwb_tag->tag, kinematic);
+                tag_kinematics_.insert(std::map<uint,const Kinematics*>::value_type(uwb_tag->tag, kinematic));
                 tag_uwb_.insert(std::map<uint,const AirSimSettings::UwbTag*>::value_type(uwb_tag->tag,uwb_tag));
             }
             return true;

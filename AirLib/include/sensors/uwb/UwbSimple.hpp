@@ -4,7 +4,8 @@
 #ifndef msr_airlib_Uwb_hpp
 #define msr_airlib_Uwb_hpp
 
-#include <random>
+#include <cstdlib>
+//#include <random>
 #include "common/Common.hpp"
 #include "UwbSimpleParams.hpp"
 #include "UwbBase.hpp"
@@ -22,9 +23,9 @@ namespace msr { namespace airlib {
 void Choose2 (const int size, int &first, int &second)
 {
     // pick a random element
-    first = rand () * size / MAX_RAND;
+    first = rand () * size / RAND_MAX;
     // pick a random element from what's left (there is one fewer to choose from)...
-    second = rand () * (size - 1) / MAX_RAND;
+    second = rand () * (size - 1) / RAND_MAX;
     // ...and adjust second choice to take into account the first choice
     if (second >= first)
     {
@@ -127,7 +128,7 @@ private: //methods
             Choose2(tagnum, first, second);
             auto tag1 = params_.available_tags[first].tag;
             if(tag1 != params_.tag ){
-                return tag1
+                return tag1;
             }
             else
             {
@@ -149,8 +150,8 @@ private:
     FrequencyLimiter freq_limiter_;
     DelayLine<Output> delay_line_;
 
-    std::random_device rd_;
-    std::mt19937 gen_(rd_());  
+    //std::random_device rd_;
+    //std::mt19937 gen_(rd_());  
 
     //start time
 };

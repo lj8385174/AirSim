@@ -16,7 +16,7 @@ public:
 public:
     UnrealUwbSensor(const AirSimSettings::UwbSetting& setting,
         AActor* actor, const NedTransform* ned_transform);
-    virtual void initializeWorldUwbInfo(std::vector<AirSimSettings::UwbTag>* uwb_tags ) override;    
+    virtual void initializeWorldUwbInfo(std::vector<AirSimSettings::UwbTag>* uwb_tags );    
 protected:
     virtual msr::airlib::real_T getRayLength(const msr::airlib::Pose& pose, const msr::airlib::uint tag) override;
 

@@ -10,6 +10,7 @@
 class UnrealUwbEnvironment: public msr::airlib::UwbEnvironment{
 public:       
         typedef msr::airlib::AirSimSettings AirSimSettings;
+        typedef msr::airlib::uint uint;
         void insertItemActor(const AirSimSettings::UwbTag& uwb_tag, const AActor* actor);
         // std::vector<const AActor*>
 // private:
