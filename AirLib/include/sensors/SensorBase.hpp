@@ -56,6 +56,10 @@ public:
         return name_;
     }
 
+    bool isGlobalSensor(){
+        return is_global_sensor_;
+    }
+
     virtual ~SensorBase() = default;
 
 private:

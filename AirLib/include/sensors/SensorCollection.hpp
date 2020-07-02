@@ -84,12 +84,11 @@ public:
         }
     }
 
-    virtual void update(bool globle_sensor)
+    virtual void update(bool global_sensor)
     {
         UpdatableObject::update();
-
         for (auto& pair : sensors_) {
-            pair.second->update();
+            pair.second->update(global_sensor);
         }
     }
 

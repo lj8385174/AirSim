@@ -85,5 +85,10 @@
         "resumable": "cpp",
         "shared_mutex": "cpp",
         "*.ipp": "cpp"
+    },
+    "search.exclude": {
+        "**/Unity": true,
+        "**/Unreal/Environments": true,
+        "**/Unreal/Plugins/AirSim/Source/AirLib": true
     }
 }

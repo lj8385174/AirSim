@@ -67,7 +67,7 @@ public:
     {
         PhysicsBody::updateKinematics(kinematics);
 
-        updateSensors(*params_, getKinematics(), getEnvironment());
+        updateLocalSensors(*params_, getKinematics(), getEnvironment());
 
         //update controller which will update actuator control signal
         vehicle_api_->update();
@@ -170,14 +170,14 @@ private: //methods
     {
         unused(state);
         unused(environment);
-        params.getSensors().update();
+        params.getSensors().update(false);
     }
 
     void updateGlobalSensors(MultiRotorParams& params, const Kinematics::State& state, const Environment& environment)
     {
         unused(state);
         unused(environment);
-        params.getSensors().update();
+        params.getSensors().update(true);
     }
 
     void initSensors(MultiRotorParams& params, const Kinematics::State& state, const Environment& environment)
