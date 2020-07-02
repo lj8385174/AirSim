@@ -45,7 +45,11 @@ public:
         for (PhysicsBody* body_ptr : *this) {
             updatePhysics(*body_ptr);
         }
+        updateEnd();
     }
+
+
+
     virtual void reportState(StateReporter& reporter) override
     {
         for (PhysicsBody* body_ptr : *this) {
@@ -103,6 +107,10 @@ private:
 		//body.getEnvironment().update();
 		
 	}
+
+    void updateEnd() {
+        //TODO current do nothing
+    }
 
     static void updateCollisionResponseInfo(const CollisionInfo& collision_info, const Kinematics::State& next, 
         bool is_collision_response, CollisionResponse& collision_response)

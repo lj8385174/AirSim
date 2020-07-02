@@ -79,6 +79,11 @@ public:
         }
     }
 
+    virtual void updateKinematicsEnd(const Kinematics::State& state) override{
+        updateGlobalSensors(*params_, getKinematics(), getEnvironment());
+    }
+
+
     //sensor getter
     const SensorCollection& getSensors() const
     {
@@ -155,6 +160,20 @@ private: //methods
     }
 
     void updateSensors(MultiRotorParams& params, const Kinematics::State& state, const Environment& environment)
+    {
+        unused(state);
+        unused(environment);
+        params.getSensors().update();
+    }
+
+    void updateLocalSensors(MultiRotorParams& params, const Kinematics::State& state, const Environment& environment)
+    {
+        unused(state);
+        unused(environment);
+        params.getSensors().update();
+    }
+
+    void updateGlobalSensors(MultiRotorParams& params, const Kinematics::State& state, const Environment& environment)
     {
         unused(state);
         unused(environment);

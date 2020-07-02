@@ -84,6 +84,16 @@ public:
         }
     }
 
+    virtual void update(bool globle_sensor)
+    {
+        UpdatableObject::update();
+
+        for (auto& pair : sensors_) {
+            pair.second->update();
+        }
+    }
+
+
     virtual void reportState(StateReporter& reporter) override
     {
         for (auto& pair : sensors_) {

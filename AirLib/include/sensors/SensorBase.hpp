@@ -30,8 +30,8 @@ public:
         Uwb   = 7
     };
 
-    SensorBase(const std::string& sensor_name = "")
-        : name_(sensor_name)
+    SensorBase(const std::string& sensor_name = "", const bool is_global_sensor = false)
+        : name_(sensor_name),is_global_sensor_(is_global_sensor) 
     {}
 
 protected:
@@ -62,6 +62,7 @@ private:
     //ground truth can be shared between many sensors
     GroundTruth ground_truth_;
     std::string name_ = "";
+    bool is_global_sensor_;
 };
 
 

@@ -13,7 +13,7 @@ namespace msr { namespace airlib {
 class UwbBase  : public SensorBase {
 public:
     UwbBase(const std::string& sensor_name = "")
-        : SensorBase(sensor_name)
+        : SensorBase(sensor_name, true)
     {
     }
 

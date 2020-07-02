@@ -66,6 +66,10 @@ public: //interface
         kinematics_->update();
     }
 
+    virtual void updateKinematicsEnd(const Kinematics::State& state){
+        // currently do nothing
+    }
+
 
 public: //methods
     //constructors
