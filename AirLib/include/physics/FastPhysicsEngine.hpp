@@ -109,9 +109,16 @@ private:
 	}
 
     void updateEnd() {
-        
+        for (PhysicsBody* body_ptr : *this) {
+            updatePhysicsEnd(*body_ptr);
+        }
         //TODO current do nothing
     }
+
+    virtual void updatePhysicsEnd(PhysicsBody& body){
+        body. updateKinematicsEnd();
+    }
+
 
     static void updateCollisionResponseInfo(const CollisionInfo& collision_info, const Kinematics::State& next, 
         bool is_collision_response, CollisionResponse& collision_response)

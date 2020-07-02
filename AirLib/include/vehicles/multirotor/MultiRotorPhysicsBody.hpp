@@ -79,7 +79,7 @@ public:
         }
     }
 
-    virtual void updateKinematicsEnd(const Kinematics::State& state) override{
+    virtual void updateKinematicsEnd() override{
         updateGlobalSensors(*params_, getKinematics(), getEnvironment());
     }
 

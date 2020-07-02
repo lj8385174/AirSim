@@ -10,8 +10,7 @@
 namespace msr { namespace airlib {
     class UwbEnvironment: public SensorEnvironmentBase{
     public:
-        // std::map<uint, const &> tag_actor_;
-        // std::map<uint, AirSimSettings::UwbTag& > tag_uwb_;
+
         std::map<uint, const Kinematics*> tag_kinematics_;
         std::map<uint, const AirSimSettings::UwbTag *> tag_uwb_;
 
@@ -19,7 +18,7 @@ namespace msr { namespace airlib {
             
         }
 
-        virtual bool  insertItem(const AirSimSettings::UwbTag* uwb_tag, const Kinematics * kinematic){
+        virtual bool insertItem(const AirSimSettings::UwbTag* uwb_tag, const Kinematics * kinematic){
             if( uwb_tag->tag == FAKE_UWB_TAG){
                 throw std::invalid_argument("Cannot insert fake tag\n");
             }
