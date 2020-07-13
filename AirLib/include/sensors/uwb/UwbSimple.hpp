@@ -82,7 +82,18 @@ public:
         if (freq_limiter_.isWaitComplete())
             setOutput(delay_line_.getOutput());
     }
+
+    virtual const Pose& getPosition() const override{
+        const GroundTruth& ground_truth = getGroundTruth();
+        return ground_truth.kinematics->pose;
+    }
+    
     //*** End: UpdatableState implementation ***//
+    
+    uint getTag()
+    {
+        return params_.tag;
+    }
 
     virtual ~UwbSimple() = default;
 
@@ -95,10 +106,7 @@ protected:
     {
         return params_;
     }
-    const uint getTag()
-    {
-        return params_.tag;
-    }
+    
 private: //methods
     Output getOutputInternal()
     {
@@ -107,7 +115,7 @@ private: //methods
 
         //order of Pose addition is important here because it also adds quaternions which is not commutative!
         // TODO: uwb scheduler is primitive. In future, we could implement more complex method to choose tags.
-        uint uwb_pair_id = chooseTag();
+        uint uwb_pair_id = uwb_env_->chooseTag(getTag());
         auto distance = getRayLength(params_.relative_pose + ground_truth.kinematics->pose,uwb_pair_id);
 
         //add noise in distance (about 0.2m sigma)
@@ -121,27 +129,32 @@ private: //methods
 
         return output;
     }
-    uint chooseTag(){
-        auto tagnum  = params_.available_tags.size();
-        if (tagnum>1){
-            int first,second;
-            Choose2(tagnum, first, second);
-            auto tag1 = params_.available_tags[first].tag;
-            if(tag1 != params_.tag ){
-                return tag1;
-            }
-            else
-            {
-                return( params_.available_tags[second].tag );
-            }
-        }
-        else{
-            return FAKE_UWB_TAG;
-        }
+    // uint chooseTag(){
+    //     auto tagnum  = params_.available_tags.size();
+    //     if (tagnum>1){
+    //         int first,second;
+    //         Choose2(tagnum, first, second);
+    //         auto tag1 = params_.available_tags[first].tag;
+    //         if(tag1 != params_.tag ){
+    //             return tag1;
+    //         }
+    //         else
+    //         {
+    //             return( params_.available_tags[second].tag );
+    //         }
+    //     }
+    //     else{
+    //         return FAKE_UWB_TAG;
+    //     }
+    // }
+
+    virtual const Pose& getPositionById(uint tag){
+        return uwb_env_->getPosById(tag);   
     }
 
 private:
     const UwbEnvironment* uwb_env_;
+
     UwbSimpleParams params_;
 
     //GaussianMarkov correlated_noise_;

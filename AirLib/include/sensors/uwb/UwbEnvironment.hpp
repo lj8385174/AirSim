@@ -2,18 +2,16 @@
 #ifndef msr_airlib_UwbEnviroment_hpp
 #define msr_airlib_UwbEnviroment_hpp
 
+#include "common/AirSimSettings.hpp"
 #include "sensors/SensorEnvironmentBase.hpp"
 #include "physics/Kinematics.hpp"
+#include "sensors/uwb/UwbBase.hpp"
 
 // UwbSensoEnvironment: control multiple access
 
 namespace msr { namespace airlib {
     class UwbEnvironment: public SensorEnvironmentBase{
     public:
-
-        std::map<uint, const Kinematics*> tag_kinematics_;
-        std::map<uint, const AirSimSettings::UwbTag *> tag_uwb_;
-
         uint getUwbPairId(uint my_id){
             
         }
@@ -45,9 +43,41 @@ namespace msr { namespace airlib {
             }
         }
 
-    // private:
-        //get all available tags
+        virtual const Pose& getPosById(uint tag) const {
+            auto it  = tag_uwb_base_.find(tag);
+            if(it != tag_uwb_base_.end()){
+                const UwbBase* u   = it->second;
+                return u->getPosition();
+            }
+            else{
+                throw std::exception("Given tag does not exist");
+            }
+        }
 
+        virtual uint chooseTag(uint mytag) const{
+            // Here you can design a centralized algorithm for link assignment
+            if (tagnum>1){
+                int first,second;
+                Choose2(tagnum, first, second);
+                auto tag1 = params_.available_tags[first].tag;
+                if(tag1 != params_.tag ){
+                    return tag1;
+                }
+                else
+                {
+                    return( params_.available_tags[second].tag );
+                }
+            }
+            else{
+                return FAKE_UWB_TAG;
+            }
+        }
+
+    
+    private:
+        std::map<uint, const Kinematics*> tag_kinematics_;
+        std::map<uint, const AirSimSettings::UwbTag *> tag_uwb_;
+        std::map<uint, const UwbBase *> tag_uwb_base_;
     };
 
 }}

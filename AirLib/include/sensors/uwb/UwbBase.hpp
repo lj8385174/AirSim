@@ -39,6 +39,10 @@ public:
         reporter.writeValue("UWB Dist-Curr", output_.distance);
     }
 
+    virtual const Pose& getPosition() const {
+        throw std::exception("This method should be overwritten");
+    }
+
     const Output& getOutput() const
     {
         return output_;
