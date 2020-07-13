@@ -12,36 +12,25 @@
 namespace msr { namespace airlib {
     class UwbEnvironment: public SensorEnvironmentBase{
     public:
-        uint getUwbPairId(uint my_id){
-            
-        }
 
-        virtual bool insertItem(const AirSimSettings::UwbTag* uwb_tag, const Kinematics * kinematic){
+        bool insertItem(const AirSimSettings::UwbTag* uwb_tag, const UwbBase* uwb_base){
             if( uwb_tag->tag == FAKE_UWB_TAG){
                 throw std::invalid_argument("Cannot insert fake tag\n");
             }
-            auto it = tag_uwb_.find(uwb_tag->tag);
-            if(it !=tag_uwb_.end() ){
+            if( tagExist(uwb_tag->tab) ){
                 throw std::invalid_argument("Tag id should be unique\n");
                 return false;
             }
             else{
-                tag_kinematics_.insert(std::map<uint,const Kinematics*>::value_type(uwb_tag->tag, kinematic));
-                tag_uwb_.insert(std::map<uint,const AirSimSettings::UwbTag*>::value_type(uwb_tag->tag,uwb_tag));
+                // here we don't explicitly assign kinematic point of a static node to nullptr
+                // tag_kinematics_.insert(std::map<uint,const Kinematics*>::value_type(uwb_tag->tag, kinematic));
+                tag_uwb_settings_.insert(std::map<uint,const AirSimSettings::UwbTag*>::value_type(uwb_tag->tag,uwb_tag));
+                tag_uwb_.insert(std::map<uint,const UwbBase*>::value_type(uwb_tag->tag, uwb_base));
+                tag_is_static_.insert(std::map<uint,const UwbBase*>::value_type(uwb_tag->tag, uwb_tag->is_static));
             }
             return true;
         }
 
-        virtual const Pose&  getObjectPoseByID(uint tag){
-            auto it  = tag_kinematics_.find(tag);
-            if(it != tag_kinematics_.end()){
-                const Kinematics* kinematic = it->second;
-                return kinematic->getPose();
-            }
-            else{
-                throw std::exception("Given tag does not exist");
-            }
-        }
 
         virtual const Pose& getPosById(uint tag) const {
             auto it  = tag_uwb_base_.find(tag);
@@ -73,11 +62,21 @@ namespace msr { namespace airlib {
             }
         }
 
+    protected:
+        bool tagExist(uint tag){
+            auto it = tag_uwb_base_.find(tag);
+            if( it !=tag_uwb_.end() ){
+                return true;
+            }
+            return false;
+        }
+
     
     private:
         std::map<uint, const Kinematics*> tag_kinematics_;
-        std::map<uint, const AirSimSettings::UwbTag *> tag_uwb_;
+        std::map<uint, const AirSimSettings::UwbTag *> tag_uwb_settings_;
         std::map<uint, const UwbBase *> tag_uwb_base_;
+        std::map<uint, bool> tag_is_static_;
     };
 
 }}
