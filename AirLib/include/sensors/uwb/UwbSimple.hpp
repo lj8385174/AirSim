@@ -129,25 +129,7 @@ private: //methods
 
         return output;
     }
-    // uint chooseTag(){
-    //     auto tagnum  = params_.available_tags.size();
-    //     if (tagnum>1){
-    //         int first,second;
-    //         Choose2(tagnum, first, second);
-    //         auto tag1 = params_.available_tags[first].tag;
-    //         if(tag1 != params_.tag ){
-    //             return tag1;
-    //         }
-    //         else
-    //         {
-    //             return( params_.available_tags[second].tag );
-    //         }
-    //     }
-    //     else{
-    //         return FAKE_UWB_TAG;
-    //     }
-    // }
-
+    
     virtual const Pose& getPositionById(uint tag){
         return uwb_env_->getPosById(tag);   
     }

@@ -1,12 +1,12 @@
-#ifndef msr_airlib_SensorEnvironmentBase_hpp
-#define msr_airlib_SensorEnvironmentBase_hpp
+#ifndef msr_airlib_SensorEnvBase_hpp
+#define msr_airlib_SensorEnvBase_hpp
 
 // Sensor Environment for UWB
 #include "common/Common.hpp"
 
 
 namespace msr { namespace airlib {
-        class SensorEnvironmentBase{
+        class SensorEnvBase{
             public:
                 virtual const Pose&  getObjectPoseByID(uint object_id) =  0;
         };

@@ -1,10 +1,10 @@
 #include "UnrealUwbEnvironment.h"
 #include <stdexcept>
 
-// SensorEnvironmentBase& UnrealUwbEnvironment::singleton{
-//     // static SensorEnvironmentBase&  instance = 
+// SensorEnvBase& UnrealUwbEnvironment::singleton{
+//     // static SensorEnvBase&  instance = 
 // }
-// msr::airlib::SensorEnvironmentBase::PoseSimple  UnrealUwbEnvironment::getObjectPoseByID(uint tag){
+// msr::airlib::SensorEnvBase::PoseSimple  UnrealUwbEnvironment::getObjectPoseByID(uint tag){
 //     PoseSimple pose;
 //     auto it  = tag_actor_.find(tag);
 //     if(it != tag_actor_.end()){
