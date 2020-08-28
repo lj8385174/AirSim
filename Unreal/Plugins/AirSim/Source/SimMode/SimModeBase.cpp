@@ -21,6 +21,8 @@
 
 #include "DrawDebugHelpers.h"
 
+#include "UnrealSensors/UnrealUwbEnv.h"
+
 //TODO: this is going to cause circular references which is fine here but
 //in future we should consider moving SimMode not derived from AActor and move
 //it to AirLib and directly implement WorldSimApiBase interface
@@ -48,7 +50,7 @@ ASimModeBase::ASimModeBase()
     static ConstructorHelpers::FClassFinder<AActor> sky_sphere_class(TEXT("Blueprint'/Engine/EngineSky/BP_Sky_Sphere'"));
     sky_sphere_class_ = sky_sphere_class.Succeeded() ? sky_sphere_class.Class : nullptr;
 
-    unreal_uwb_env_  =  std::unique_ptr<UnrealUwbEnvironment>(new UnrealUwbEnvironment());
+    unreal_uwb_env_  =  std::shared_ptr<UnrealUwbEnvironment>(new UnrealUwbEnvironment());
 }
 
 void ASimModeBase::BeginPlay()
@@ -614,6 +616,18 @@ std::unique_ptr<PawnSimApi> ASimModeBase::createVehicleSimApi(
 
     return sim_api;
 }
+
+std::unique_ptr<PawnSimApi> ASimModeBase::createVehicleSimApi(
+    const PawnSimApi::Params& pawn_sim_api_params, const std::shared_ptr<msr::airlib::SensorEnvBase> sensor_env ) const
+{      
+    unused(sensor_env);
+    unused(pawn_sim_api_params);
+    auto sim_api = std::unique_ptr<PawnSimApi>();
+    sim_api->initialize();
+
+    return sim_api;
+}
+
 msr::airlib::VehicleApiBase* ASimModeBase::getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
     const PawnSimApi* sim_api) const
 {

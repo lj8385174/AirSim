@@ -89,6 +89,8 @@ protected: //must overrides
     virtual void initializeVehiclePawn(APawn* pawn);
     virtual std::unique_ptr<PawnSimApi> createVehicleSimApi(
         const PawnSimApi::Params& pawn_sim_api_params) const;
+    virtual std::unique_ptr<PawnSimApi> createVehicleSimApi(
+        const PawnSimApi::Params& pawn_sim_api_params, const std::shared_ptr<msr::airlib::SensorEnvBase>) const;
     virtual msr::airlib::VehicleApiBase* getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
         const PawnSimApi* sim_api) const;
 
@@ -135,7 +137,8 @@ private:
     float tod_update_interval_secs_;
     bool tod_move_sun_;
 
-    std::unique_ptr<UnrealUwbEnvironment> unreal_uwb_env_;
+    //TODO: for uwb environment, ensure the necessity firstly.
+    std::shared_ptr<UnrealUwbEnvironment> unreal_uwb_env_;
 
     std::unique_ptr<NedTransform> global_ned_transform_;
     std::unique_ptr<msr::airlib::WorldSimApiBase> world_sim_api_;

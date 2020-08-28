@@ -126,6 +126,19 @@ std::unique_ptr<PawnSimApi> ASimModeCar::createVehicleSimApi(
     vehicle_sim_api->reset();
     return vehicle_sim_api;
 }
+
+std::unique_ptr<PawnSimApi> ASimModeCar::createVehicleSimApi(
+    const PawnSimApi::Params& pawn_sim_api_params, const std::shared_ptr<msr::airlib::SensorEnvBase> sensor_base) const
+{   
+    unused(sensor_base);
+    auto vehicle_pawn = static_cast<TVehiclePawn*>(pawn_sim_api_params.pawn);
+    auto vehicle_sim_api = std::unique_ptr<PawnSimApi>(new CarPawnSimApi(pawn_sim_api_params, 
+        vehicle_pawn->getKeyBoardControls(), vehicle_pawn->getVehicleMovementComponent()));
+    vehicle_sim_api->initialize();
+    vehicle_sim_api->reset();
+    return vehicle_sim_api;
+}
+
 msr::airlib::VehicleApiBase* ASimModeCar::getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
     const PawnSimApi* sim_api) const
 {

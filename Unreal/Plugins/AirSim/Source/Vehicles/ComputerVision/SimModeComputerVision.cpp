@@ -70,6 +70,16 @@ std::unique_ptr<PawnSimApi> ASimModeComputerVision::createVehicleSimApi(
     return vehicle_sim_api;
 }
 
+std::unique_ptr<PawnSimApi> ASimModeComputerVision::createVehicleSimApi(
+        const PawnSimApi::Params& pawn_sim_api_params, const std::shared_ptr<msr::airlib::SensorEnvBase> sensor_base)const 
+{   
+    unused(sensor_base);
+    auto vehicle_sim_api = std::unique_ptr<PawnSimApi>(new PawnSimApi(pawn_sim_api_params));
+    vehicle_sim_api->initialize();
+    vehicle_sim_api->reset();
+    return vehicle_sim_api;
+}
+
 msr::airlib::VehicleApiBase* ASimModeComputerVision::getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
     const PawnSimApi* sim_api) const
 {

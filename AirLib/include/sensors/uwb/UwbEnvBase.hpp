@@ -12,21 +12,20 @@
 namespace msr { namespace airlib {
     class UwbEnvBase: public SensorEnvBase{
     public:
-
+        // Initialization
         bool insertItem(const AirSimSettings::UwbTag* uwb_tag, const UwbBase* uwb_base){
             if( uwb_tag->tag == FAKE_UWB_TAG){
                 throw std::invalid_argument("Cannot insert fake tag\n");
             }
-            if( tagExist(uwb_tag->tab) ){
+            if( tagExist(uwb_tag->tag) ){
                 throw std::invalid_argument("Tag id should be unique\n");
                 return false;
             }
             else{
                 // here we don't explicitly assign kinematic point of a static node to nullptr
-                // tag_kinematics_.insert(std::map<uint,const Kinematics*>::value_type(uwb_tag->tag, kinematic));
                 tag_uwb_settings_.insert(std::map<uint,const AirSimSettings::UwbTag*>::value_type(uwb_tag->tag,uwb_tag));
-                tag_uwb_.insert(std::map<uint,const UwbBase*>::value_type(uwb_tag->tag, uwb_base));
-                tag_is_static_.insert(std::map<uint,const UwbBase*>::value_type(uwb_tag->tag, uwb_tag->is_static));
+                tag_uwb_base_.insert(std::map<uint,const UwbBase*>::value_type(uwb_tag->tag, uwb_base));
+                tag_is_static_.insert(std::map<uint,bool>::value_type(uwb_tag->tag, uwb_tag->is_static));
             }
             return true;
         }
