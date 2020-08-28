@@ -9,7 +9,7 @@
 #include "common/Common.hpp"
 #include "UwbSimpleParams.hpp"
 #include "UwbBase.hpp"
-#include "UwbEnvironment.hpp"
+#include "UwbEnvBase.hpp"
 #include "common/GaussianMarkov.hpp"
 #include "common/DelayLine.hpp"
 #include "common/FrequencyLimiter.hpp"
@@ -50,7 +50,7 @@ public:
         delay_line_.initialize(params_.update_latency);
     }
 
-    virtual void initializeEnvironment(const UwbEnvironment* uwb_env )  // TODO: I want just use available_tags_ to point this object, is that right?
+    virtual void initializeEnvironment(const UwbEnvBase* uwb_env )  // TODO: I want just use available_tags_ to point this object, is that right?
     {
         uwb_env_  = uwb_env;
     }
@@ -135,7 +135,7 @@ private: //methods
     }
 
 private:
-    const UwbEnvironment* uwb_env_;
+    const UwbEnvBase* uwb_env_;
 
     UwbSimpleParams params_;
 

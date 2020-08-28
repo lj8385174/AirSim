@@ -7,10 +7,10 @@
 #include "physics/Kinematics.hpp"
 #include "sensors/uwb/UwbBase.hpp"
 
-// UwbEnvironment: control multiple access
+// UwbEnvBase: control multiple access
 
 namespace msr { namespace airlib {
-    class UwbEnvironment: public SensorEnvBase{
+    class UwbEnvBase: public SensorEnvBase{
     public:
 
         bool insertItem(const AirSimSettings::UwbTag* uwb_tag, const UwbBase* uwb_base){
