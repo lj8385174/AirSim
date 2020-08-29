@@ -41,6 +41,31 @@ void MultirotorPawnSimApi::initialize()
     did_reset_ = false;
 }
 
+void MultirotorPawnSimApi::initialize(const std::shared_ptr<msr::airlib::SensorEnvBase> sensor_base)
+{
+    PawnSimApi::initialize();
+
+    //create vehicle API
+    std::shared_ptr<UnrealSensorFactory> sensor_factory = std::make_shared<UnrealSensorFactory>(getPawn(), &getNedTransform());
+    vehicle_params_ = MultiRotorParamsFactory::createConfig(getVehicleSetting(), sensor_factory);
+    vehicle_api_ = vehicle_params_->createMultirotorApi();
+    //setup physics vehicle
+    multirotor_physics_body_ = std::unique_ptr<MultiRotor>(new MultiRotorPhysicsBody(vehicle_params_.get(), vehicle_api_.get(),
+        getKinematics(), getEnvironment()));
+    rotor_count_ = multirotor_physics_body_->wrenchVertexCount();
+    rotor_actuator_info_.assign(rotor_count_, RotorActuatorInfo());
+
+    vehicle_api_->setSimulatedGroundTruth(getGroundTruthKinematics(), getGroundTruthEnvironment());
+
+    //initialize private vars
+    last_phys_pose_ = pending_phys_pose_ = Pose::nanPose();
+    pending_pose_status_ = PendingPoseStatus::NonePending;
+    reset_pending_ = false;
+    did_reset_ = false;
+}
+
+
+
 void MultirotorPawnSimApi::pawnTick(float dt)
 {
     unused(dt);

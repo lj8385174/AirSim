@@ -67,7 +67,7 @@ public: //types
 
 public: //implementation of VehicleSimApiBase
     virtual void initialize() override;
-
+    virtual void initialize(const std::shared_ptr<SensorEnvBase> sensor_base);
     virtual void resetImplementation() override;
     virtual void update() override;
 

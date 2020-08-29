@@ -27,6 +27,7 @@ public:
 
 public:
     virtual void initialize() override;
+    virtual void initialize(const std::shared_ptr<msr::airlib::SensorEnvBase> sensor_base);
 
     virtual ~MultirotorPawnSimApi() = default;
 

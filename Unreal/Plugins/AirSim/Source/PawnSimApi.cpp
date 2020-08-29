@@ -54,6 +54,12 @@ void PawnSimApi::initialize()
     params_.pawn_events->getPawnTickSignal().connect_member(this, &PawnSimApi::pawnTick);
 }
 
+void PawnSimApi::initialize(const std::shared_ptr<SensorEnvBase> sensor_base)
+{
+    unused(sensor_base);
+    
+}
+
 void PawnSimApi::setStartPosition(const FVector& position, const FRotator& rotator)
 {
     initial_state_.start_location = getUUPosition();
