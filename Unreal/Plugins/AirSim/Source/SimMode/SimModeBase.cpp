@@ -549,7 +549,8 @@ void ASimModeBase::setupVehiclesAndCamera()
                 getVehiclePawnEvents(vehicle_pawn), getVehiclePawnCameras(vehicle_pawn), pip_camera_class, 
                 collision_display_template, home_geopoint, vehicle_name);
 
-            auto vehicle_sim_api = createVehicleSimApi(pawn_sim_api_params);
+            auto vehicle_sim_api = createVehicleSimApi(pawn_sim_api_params, static_cast<const std::shared_ptr<msr::airlib::SensorEnvBase>>(unreal_uwb_env_));
+            
             auto vehicle_sim_api_p = vehicle_sim_api.get();
             auto vehicle_Api = getVehicleApi(pawn_sim_api_params, vehicle_sim_api_p);
             getApiProvider()->insert_or_assign(vehicle_name, vehicle_Api, vehicle_sim_api_p);

@@ -134,9 +134,15 @@ std::unique_ptr<PawnSimApi> ASimModeWorldMultiRotor::createVehicleSimApi(
 }
 
 std::unique_ptr<PawnSimApi> ASimModeWorldMultiRotor::createVehicleSimApi(
-        const PawnSimApi::Params& pawn_sim_api_params, const std::shared_ptr<msr::airlib::SensorEnvBase>sensor_base) const
+        const PawnSimApi::Params& pawn_sim_api_params, const std::shared_ptr<msr::airlib::SensorEnvBase> sensor_base) const
 {
-    // Here we asssign sensor base to the simapi; 
+    // Here we asssign sensor base to the simapi;
+    
+    auto vehicle_sim_api = std::unique_ptr<PawnSimApi>(new MultirotorPawnSimApi(pawn_sim_api_params));
+    vehicle_sim_api->initialize();
+    //For multirotors the vehicle_sim_api are in PhysicsWorld container and then get reseted when world gets reseted
+    //vehicle_sim_api->reset();
+    return vehicle_sim_api;
 }
 msr::airlib::VehicleApiBase* ASimModeWorldMultiRotor::getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
     const PawnSimApi* sim_api) const
