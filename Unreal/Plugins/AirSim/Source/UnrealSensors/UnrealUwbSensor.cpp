@@ -7,15 +7,15 @@
 #include "NedTransform.h"
 
 UnrealUwbSensor::UnrealUwbSensor(const AirSimSettings::UwbSetting& setting,
-    AActor* actor, const NedTransform* ned_transform)
-    : msr::airlib::UwbSimple(setting), actor_(actor), ned_transform_(ned_transform)
+    AActor* actor, const NedTransform* ned_transform,const std::shared_ptr<UnrealUwbEnv> sensor_env)
+    : msr::airlib::UwbSimple(setting, sensor_env), actor_(actor), ned_transform_(ned_transform), 
 {
 }
 
-void UnrealUwbSensor::initializeWorldUwbInfo(std::vector<msr::airlib::AirSimSettings::UwbTag>* uwb_tags) {
-    // TODO add some initialization code 
-    unused(uwb_tags);
-}
+// void UnrealUwbSensor::initializeWorldUwbInfo(std::vector<msr::airlib::AirSimSettings::UwbTag>* uwb_tags) {
+//     // TODO add some initialization code 
+//     unused(uwb_tags);
+// }
 
 msr::airlib::real_T UnrealUwbSensor::getRayLength(const msr::airlib::Pose& pose, const msr::airlib::uint tag)
 {
@@ -36,7 +36,7 @@ msr::airlib::real_T UnrealUwbSensor::getRayLength(const msr::airlib::Pose& pose,
         }
         else{
             FHitResult dist_hit = FHitResult(ForceInit);
-            // AActor* except_actor   = (UnrealUwbEnvironment*)uwb_env_ -> tag_actor_[tag];
+            // AActor* except_actor   = (UnrealUwbEnv*)uwb_env_ -> tag_actor_[tag];
             bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalNed(start), ned_transform_->fromLocalNed(end), dist_hit );
             float dist = is_hit? NOT_REACHABLE_DISTANCE_RESULT: distance / 100.0f;
             return dist;
@@ -53,7 +53,7 @@ msr::airlib::real_T UnrealUwbSensor::getRayLength(const msr::airlib::Pose& pose,
         }
         else{
             FHitResult dist_hit = FHitResult(ForceInit);
-            AActor* except_actor   = (UnrealUwbEnvironment*)uwb_env_ -> tag_actor_[tag]; //TODO: current it merely ignore from-to actors, while other vehicles should be included.
+            AActor* except_actor   = (UnrealUwbEnv*)uwb_env_ -> tag_actor_[tag]; //TODO: current it merely ignore from-to actors, while other vehicles should be included.
             bool is_hit = UAirBlueprintLib::GetObstacle(actor_, ned_transform_->fromLocalNed(start), ned_transform_->fromLocalNed(end), dist_hit, except_actor );
             float dist = is_hit? NOT_REACHABLE_DISTANCE_RESULT: distance / 100.0f;
             return dist;

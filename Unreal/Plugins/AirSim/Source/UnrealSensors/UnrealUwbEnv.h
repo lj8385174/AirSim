@@ -7,7 +7,7 @@
 #include "NedTransform.h"
 
 
-class UnrealUwbEnvironment: public msr::airlib::UwbEnvBase{
+class UnrealUwbEnv: public msr::airlib::UwbEnvBase{
 public:       
         typedef msr::airlib::AirSimSettings AirSimSettings;
         typedef msr::airlib::uint uint;

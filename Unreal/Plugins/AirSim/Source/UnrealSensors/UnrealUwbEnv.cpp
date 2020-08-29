@@ -1,10 +1,10 @@
-#include "UnrealUwbEnvironment.h"
+#include "UnrealUwbEnv.h"
 #include <stdexcept>
 
-// SensorEnvBase& UnrealUwbEnvironment::singleton{
+// SensorEnvBase& UnrealUwbEnv::singleton{
 //     // static SensorEnvBase&  instance = 
 // }
-// msr::airlib::SensorEnvBase::PoseSimple  UnrealUwbEnvironment::getObjectPoseByID(uint tag){
+// msr::airlib::SensorEnvBase::PoseSimple  UnrealUwbEnv::getObjectPoseByID(uint tag){
 //     PoseSimple pose;
 //     auto it  = tag_actor_.find(tag);
 //     if(it != tag_actor_.end()){
@@ -17,7 +17,7 @@
 // };
 
 
- void UnrealUwbEnvironment::insertItemActor(const AirSimSettings::UwbTag& uwb_tag, const AActor* actor){
+ void UnrealUwbEnv::insertItemActor(const AirSimSettings::UwbTag& uwb_tag, const AActor* actor){
       if( uwb_tag.tag == FAKE_UWB_TAG){
             throw std::invalid_argument("Cannot insert fake tag\n");
         }

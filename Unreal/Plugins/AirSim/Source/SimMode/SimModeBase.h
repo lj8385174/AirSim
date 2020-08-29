@@ -14,7 +14,7 @@
 #include "api/ApiProvider.hpp"
 #include "PawnSimApi.h"
 #include "common/StateReporterWrapper.hpp"
-#include "UnrealSensors/UnrealUwbEnvironment.h"
+#include "UnrealSensors/UnrealUwbEnv.h"
 #include "SimModeBase.generated.h"
 
 
@@ -138,7 +138,7 @@ private:
     bool tod_move_sun_;
 
     //TODO: for uwb environment, ensure the necessity firstly.
-    std::shared_ptr<UnrealUwbEnvironment> unreal_uwb_env_;
+    std::shared_ptr<UnrealUwbEnv> unreal_uwb_env_;
 
     std::unique_ptr<NedTransform> global_ned_transform_;
     std::unique_ptr<msr::airlib::WorldSimApiBase> world_sim_api_;

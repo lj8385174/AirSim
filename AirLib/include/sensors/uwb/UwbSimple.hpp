@@ -35,8 +35,8 @@ void Choose2 (const int size, int &first, int &second)
 
 class UwbSimple  : public UwbBase {
 public:
-    UwbSimple(const AirSimSettings::UwbSetting& setting = AirSimSettings::UwbSetting())
-        : UwbBase(setting.sensor_name)
+    UwbSimple(const AirSimSettings::UwbSetting& setting = AirSimSettings::UwbSetting(), const std::shared_ptr<UwbEnvBase> uwb_env)
+        : UwbBase(setting.sensor_name), uwb_env_(uwb_env)
     {
         // initialize params, including tag
         params_.initializeFromSettings(setting);
@@ -135,7 +135,7 @@ private: //methods
     }
 
 private:
-    const UwbEnvBase* uwb_env_;
+    const std::shared_ptr<UwbEnvBase> uwb_env_;
 
     UwbSimpleParams params_;
 

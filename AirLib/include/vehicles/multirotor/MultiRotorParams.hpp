@@ -64,7 +64,7 @@ public: //interface
         
         setupParams();
 
-        addSensorsFromSettings(vehicle_setting);
+        addSensorsFromSettings(vehicle_setting, sensor_env);
     }
 
     const Params& getParams() const
@@ -84,7 +84,7 @@ public: //interface
         return sensors_;
     }
 
-    void addSensorsFromSettings(const AirSimSettings::VehicleSetting* vehicle_setting)
+    void addSensorsFromSettings(const AirSimSettings::VehicleSetting* vehicle_setting,const std::shared_ptr<SensorEnvBase> sensor_env)
     {
         // use sensors from vehicle settings; if empty list, use default sensors.
         // note that the vehicle settings completely override the default sensor "list";

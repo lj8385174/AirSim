@@ -50,7 +50,7 @@ ASimModeBase::ASimModeBase()
     static ConstructorHelpers::FClassFinder<AActor> sky_sphere_class(TEXT("Blueprint'/Engine/EngineSky/BP_Sky_Sphere'"));
     sky_sphere_class_ = sky_sphere_class.Succeeded() ? sky_sphere_class.Class : nullptr;
 
-    unreal_uwb_env_  =  std::shared_ptr<UnrealUwbEnvironment>(new UnrealUwbEnvironment());
+    unreal_uwb_env_  =  std::shared_ptr<UnrealUwbEnv>(new UnrealUwbEnv());
 }
 
 void ASimModeBase::BeginPlay()

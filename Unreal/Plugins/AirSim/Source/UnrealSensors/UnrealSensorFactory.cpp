@@ -11,7 +11,7 @@ UnrealSensorFactory::UnrealSensorFactory(AActor* actor, const NedTransform* ned_
 }
 
 std::unique_ptr<msr::airlib::SensorBase> UnrealSensorFactory::createSensorFromSettings(
-    const AirSimSettings::SensorSetting* sensor_setting) const
+    const AirSimSettings::SensorSetting* sensor_setting,const std::shared_ptr<SensorEnvBase> sensor_env  = std::shared_ptr<SensorEnvBase>(nullptr)) const
 {
     using SensorBase = msr::airlib::SensorBase;
 
@@ -26,7 +26,7 @@ std::unique_ptr<msr::airlib::SensorBase> UnrealSensorFactory::createSensorFromSe
         return std::unique_ptr<UnrealUwbSensor>(new UnrealUwbSensor(
             *static_cast<const AirSimSettings::UwbSetting*>(sensor_setting), actor_, ned_transform_));
     default:
-        return msr::airlib::SensorFactory::createSensorFromSettings(sensor_setting);
+        return msr::airlib::SensorFactory::createSensorFromSettings(sensor_setting,sensor_env);
     }
 }
 

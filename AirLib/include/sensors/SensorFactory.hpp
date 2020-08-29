@@ -3,6 +3,7 @@
 
 
 #include "SensorBase.hpp"
+#include "SensorEnvBase.hpp"
 #include "SensorCollection.hpp"
 #include <memory>
 
@@ -20,7 +21,7 @@ public:
 
     // creates one sensor from settings
     virtual std::unique_ptr<SensorBase> createSensorFromSettings(
-        const AirSimSettings::SensorSetting* sensor_setting) const
+        const AirSimSettings::SensorSetting* sensor_setting,const std::shared_ptr<SensorEnvBase> sensor_env  = std::shared_ptr<SensorEnvBase>(nullptr)) const
     {
         switch (sensor_setting->sensor_type) {
         case SensorBase::SensorType::Imu:
@@ -40,7 +41,7 @@ public:
     virtual void createSensorsFromSettings(
         const std::map<std::string, std::unique_ptr<AirSimSettings::SensorSetting>>& sensors_settings,
         SensorCollection& sensors,
-        vector<unique_ptr<SensorBase>>& sensor_storage) const
+        vector<unique_ptr<SensorBase>>& sensor_storage,const std::shared_ptr<SensorEnvBase> sensor_env  = std::shared_ptr<SensorEnvBase>(nullptr)) const
     {
         for (const auto& sensor_setting_pair : sensors_settings) {
             const AirSimSettings::SensorSetting* sensor_setting = sensor_setting_pair.second.get();
@@ -49,7 +50,8 @@ public:
             if (sensor_setting == nullptr || !sensor_setting->enabled)
                 continue;
 
-            std::unique_ptr<SensorBase> sensor = createSensorFromSettings(sensor_setting);
+            std::unique_ptr<SensorBase> sensor = createSensorFromSettings(sensor_setting,sensor_env);
+
             if (sensor) {
                     SensorBase* sensor_temp = sensor.get();
                     sensor_storage.push_back(std::move(sensor));
