@@ -48,12 +48,10 @@ public:
         //initialize frequency limiter
         freq_limiter_.initialize(params_.update_frequency, params_.startup_delay);
         delay_line_.initialize(params_.update_latency);
+
+        // uwb_env_ ->insertItem();
     }
 
-    virtual void initializeEnvironment(const UwbEnvBase* uwb_env )  // TODO: I want just use available_tags_ to point this object, is that right?
-    {
-        uwb_env_  = uwb_env;
-    }
 
     //*** Start: UpdatableState implementation ***//
     virtual void resetImplementation() override
@@ -148,7 +146,6 @@ private:
     //std::random_device rd_;
     //std::mt19937 gen_(rd_());  
 
-    //start time
 };
 
 }} //namespace

@@ -198,7 +198,7 @@ public: //types
     struct DistanceSetting : SensorSetting {
     };
 
-    struct UwbTag{ // struct for storing static tag
+    struct UwbTag{ // struct for storing uwb tag
         uint tag;
         bool is_static;
         bool enabled;

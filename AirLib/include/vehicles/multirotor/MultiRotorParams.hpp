@@ -57,7 +57,7 @@ public: //interface
 
     virtual ~MultiRotorParams() = default;
 
-    virtual void initialize(const AirSimSettings::VehicleSetting* vehicle_setting, const std::shared_ptr<SensorEnvBase> sensor_env)
+    virtual void initialize(const AirSimSettings::VehicleSetting* vehicle_setting, const std::shared_ptr<SensorEnvBase> sensor_env = nullptr)
     {
         sensor_storage_.clear();
         sensors_.clear();

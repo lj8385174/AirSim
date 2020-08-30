@@ -23,6 +23,7 @@ public:
     virtual std::unique_ptr<SensorBase> createSensorFromSettings(
         const AirSimSettings::SensorSetting* sensor_setting,const std::shared_ptr<SensorEnvBase> sensor_env  = std::shared_ptr<SensorEnvBase>(nullptr)) const
     {
+        unused(sensor_env);
         switch (sensor_setting->sensor_type) {
         case SensorBase::SensorType::Imu:
             return std::unique_ptr<ImuSimple>(new ImuSimple(*static_cast<const AirSimSettings::ImuSetting*>(sensor_setting)));

@@ -47,11 +47,13 @@ public:
     
     void update(bool global_sensor){
         UpdatableObject::update();
-        
-        for(TUpdatableObjectPtr& member : members_)
-            if ( member -> isGlobalSensor() && global_sensor ==true) || (member -> isGlobalSensor() == false && global_sensor == false){
+
+        for (TUpdatableObjectPtr& member : members_) {
+            if ((member->isGlobalSensor() && global_sensor == true) || (member -> isGlobalSensor() == false && global_sensor == false)) {
                 member->update();
             }
+        }
+            
     }
 
     virtual void reportState(StateReporter& reporter) override

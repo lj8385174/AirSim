@@ -47,7 +47,6 @@ struct UwbSimpleParams {
         max_distance  = settings.max_distance;
         relative_pose = settings.pose;
         available_tags= settings.available_tags;
-        // unused(settings); 
     }
 };
 

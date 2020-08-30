@@ -12,10 +12,6 @@ UnrealUwbSensor::UnrealUwbSensor(const AirSimSettings::UwbSetting& setting,
 {
 }
 
-// void UnrealUwbSensor::initializeWorldUwbInfo(std::vector<msr::airlib::AirSimSettings::UwbTag>* uwb_tags) {
-//     // TODO add some initialization code 
-//     unused(uwb_tags);
-// }
 
 msr::airlib::real_T UnrealUwbSensor::getRayLength(const msr::airlib::Pose& pose, const msr::airlib::uint tag)
 {
