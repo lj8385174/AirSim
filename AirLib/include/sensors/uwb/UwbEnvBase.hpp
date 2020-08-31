@@ -30,6 +30,10 @@ namespace msr { namespace airlib {
             return true;
         }
 
+        bool insertItem(const AirSimSettings::UwbSetting& setting, const UwbBase* uwb_base){
+            
+        }
+
 
         virtual const Pose& getPosById(uint tag) const {
             auto it  = tag_uwb_base_.find(tag);

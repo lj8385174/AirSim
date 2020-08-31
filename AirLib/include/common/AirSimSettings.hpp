@@ -218,7 +218,7 @@ public: //types
         Pose pose; // for static tag, it means absolute position, for dynamic tag, it is the relative position
         std::vector<UwbTag> available_tags;
     };
-
+    
     struct LidarSetting : SensorSetting {
 
         // shared defaults
